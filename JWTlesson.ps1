@@ -1,11 +1,12 @@
-[System.Net.ServicePointManager]::SecurityProtocol =  [System.Net.ServicePointManager]::SecurityProtocol +  [System.Net.SecurityProtocolType]::Tls12;
+function aaa (){[System.Net.ServicePointManager]::SecurityProtocol =  [System.Net.ServicePointManager]::SecurityProtocol +  [System.Net.SecurityProtocolType]::Tls12;
 $HeaderString='{
-  "alg" : "RS256"
+  "alg" : "RH256"
   
 }'
 $HeaderByte = ([System.Text.Encoding]::Default).GetBytes($HeaderString)
 $HeaderBase64 = $([convert]::ToBase64String($HeaderByte))
-$exptime = [int][double]::parse((Get-Date -Date $((Get-Date).addseconds($ValidforSeconds).ToUniversalTime()) -UFormat %s)) + 280
+$ValidforSeconds = 250
+$exptime = [int][double]::parse((Get-Date -Date $((Get-Date).addseconds($ValidforSeconds).ToUniversalTime()) -UFormat %s)) 
 $LoginMap = @{
   iss="3MVG9pe2TCoA1Pf6b.MWGLscN_7l51xXAF79OFZmjqfNPto3JohTujho1eWZErHffpBnRYVH8889zpruvUOp0";
   aud='https://login.salesforce.com';
@@ -18,7 +19,7 @@ $LoginBase64 = $([convert]::ToBase64String($LoginByte))
 
 $JWTRequest = $HeaderBase64 + "." + $LoginBase64
 $arg = New-Object System.Security.Cryptography.HMACSHA256
-$arg.Key = [System.Text.Encoding]::Default.GetBytes(('.\server.key')
+$arg.Key = [System.Text.Encoding]::Default.GetBytes(($(Get-Content '.\server.key')))
 $Signature = [Convert]::ToBase64String($arg.ComputeHash([System.Text.Encoding]::Default.GetBytes($JWTRequest)))
 $jwt = $JWTRequest + '.' + $Signature
 $b = @{grant_type='urn:ietf:params:oauth:grant-type:jwt-bearer';
@@ -30,14 +31,12 @@ try {Invoke-WebRequest -Uri $EndPoint -Method Post -Body $b}catch{
   $ErrorMessage = $_.Exception.Message
   $FailedItem = $_.Exception.ItemName
   $result = $_.Exception.Response.GetResponseStream()
-  echo '## result2 ##' $result
+  Write-Output '## result2 ##' $result
  $reader = New-Object System.IO.StreamReader($result)
-  echo '## reader ##' $reader 
+ Write-Output '## reader ##' $reader 
  $responseBody = $reader.ReadToEnd();
-  echo '## responseBody ##' $responseBody
-
-
-
+ Write-Output '## responseBody ##' $responseBody
+ Write-Output $ErrorMessage
+ Write-Output $FailedItem
 }
-
-#$key = $(cat .\server.key)
+}
