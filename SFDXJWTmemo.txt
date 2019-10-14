@@ -1,0 +1,6 @@
+$ export CONSUMER_KEY=<connected app consumer key>
+$ export JWT_KEY_FILE=<your server.key path>
+$ export HUB_USERNAME=<your Dev Hub username>
+ 
+$ sfdx force:auth:jwt:grant -i "3MVG9pe2TCoA1Pf6b.MWGLscN_7l51xXAF79OFZmjqfNPto3JohTujho1eWZErHffpBnRYVH8889zpruvUOp0" -u 'mushimaruko@gmail.com' -f 'server.pem' -a jwt
+Successfully authorized xxxxxxxxxxx@yyyyyyyyy.jp with org id 00XXXXXXXXXXXXXX
