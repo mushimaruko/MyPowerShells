@@ -1,3 +1,4 @@
+[System.Net.ServicePointManager]::SecurityProtocol =  [System.Net.ServicePointManager]::SecurityProtocol +  [System.Net.SecurityProtocolType]::Tls12;
 $HeaderString='{
   "alg" : "RS256"
   
@@ -17,8 +18,8 @@ $LoginBase64 = $([convert]::ToBase64String($LoginByte))
 
 $JWTRequest = $HeaderBase64 + "." + $LoginBase64
 $arg = New-Object System.Security.Cryptography.HMACSHA256
-$arg.Key = [System.Text.Encoding]::UTF8.GetBytes('.\server.key')
-$Signature = [Convert]::ToBase64String($arg.ComputeHash([System.Text.Encoding]::UTF8.GetBytes($JWTRequest))).Split('=')[0].Replace('+', '-').Replace('/', '_')
+$arg.Key = [System.Text.Encoding]::Default.GetBytes(('.\server.key')
+$Signature = [Convert]::ToBase64String($arg.ComputeHash([System.Text.Encoding]::Default.GetBytes($JWTRequest)))
 $jwt = $JWTRequest + '.' + $Signature
 $b = @{grant_type='urn:ietf:params:oauth:grant-type:jwt-bearer';
     assertion=$jwt
