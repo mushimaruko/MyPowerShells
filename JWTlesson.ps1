@@ -25,6 +25,19 @@ $b = @{grant_type='urn:ietf:params:oauth:grant-type:jwt-bearer';
     assertion=$jwt
 }
 $EndPoint = 'https://login.salesforce.com/services/oauth2/token'
-Invoke-WebRequest -Uri $EndPoint -Method Post -Body $b
+try {Invoke-WebRequest -Uri $EndPoint -Method Post -Body $b}catch{
+  echo '### Inside catch ###'
+  $ErrorMessage = $_.Exception.Message
+  $FailedItem = $_.Exception.ItemName
+  $result = $_.Exception.Response.GetResponseStream()
+  echo '## result2 ##' $result
+ $reader = New-Object System.IO.StreamReader($result)
+  echo '## reader ##' $reader 
+ $responseBody = $reader.ReadToEnd();
+  echo '## responseBody ##' $responseBody
+
+
+
+}
 
 #$key = $(cat .\server.key)
