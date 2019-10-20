@@ -31,7 +31,12 @@ function aaa (){
     #JWTの本文を構築する。
     $JWTRequest = $HeaderBase64 + "." + $LoginBase64
     #証明書による、サイン情報の構築
-    $arg = New-Object System.Security.Cryptography.HMACSHA256
+    $crt = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
+    $pem = $([System.Text.Encoding]::Default).GetBytes($(cat $SSLKeyFile))
+    $crt.Import($pem)   
+    #$arg = New-Object System.Security.Cryptography.HMACSHA256
+    $rsa = $crt.PrivateKey
+    
     $arg.Key = $([System.Text.Encoding]::Default.GetBytes(($(Get-Content $SSLKeyFile))))
     $Signature = $([System.Convert]::ToBase64String($arg.ComputeHash([System.Text.Encoding]::Default.GetBytes($JWTRequest))))
     #SFDC用PostMessageの構築
@@ -133,13 +138,13 @@ function New-Jwt {
             sub=$SFDCLoginUser;
             exp=$exptime;
             };
-        $Ceart = $SSLKeyFile
+        $Cert = $SSLKeyFile
         [string]$PayloadJson = $($LoginMap | ConvertTo-Json)
         Write-Verbose "Payload to sign: $PayloadJson"
         Write-Verbose "Signing certificate: $($Cert.Subject)"
     
-        try { ConvertFrom-Json -InputObject $payloadJson -ErrorAction Stop | Out-Null } # Validating that the parameter is actually JSON - if not, generate breaking error
-        catch { throw "The supplied JWT payload is not JSON: $payloadJson" }
+        #try { ConvertFrom-Json -InputObject $payloadJson -ErrorAction Stop | Out-Null } # Validating that the #parameter is actually JSON - if not, generate breaking error
+        #catch { throw "The supplied JWT payload is not JSON: $payloadJson" }
     
         $encodedHeader = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($Header)) -replace '\+','-' -replace '/','_' -replace '='
         $encodedPayload = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($PayloadJson)) -replace '\+','-' -replace '/','_' -replace '='

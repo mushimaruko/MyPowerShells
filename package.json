@@ -1,0 +1,25 @@
+{
+  "name": "mypowershells",
+  "version": "1.0.0",
+  "main": "sfdcAccess.js",
+  "dependencies": {
+    "jsforce": "^1.9.2",
+    "jsonwebtoken": "^8.5.1",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mushimaruko/MyPowerShells.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mushimaruko/MyPowerShells/issues"
+  },
+  "homepage": "https://github.com/mushimaruko/MyPowerShells#readme",
+  "description": ""
+}
