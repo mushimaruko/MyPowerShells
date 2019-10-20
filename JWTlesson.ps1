@@ -38,7 +38,8 @@ $FullMessage = @{grant_type=$SFDCFixedGrantCode;
 }
 $EndPoint = $SFDCEndPoint
 #Curl実行
-try {Invoke-WebRequest -Uri $EndPoint -Method Post -Body $FullMessage}catch{
+try {Invoke-WebRequest -Uri $EndPoint -Method Post -Body $FullMessage}
+catch [System.Net.WebException] {
   echo '### Inside catch ###'
   $ErrorMessage = $_.Exception.Message
   $FailedItem = $_.Exception.ItemName
