@@ -7,7 +7,7 @@ var TOKEN_ENDPOINT_URL = 'https://login.salesforce.com/services/oauth2/token';
 var ISSUER = '3MVG9pe2TCoA1Pf6b.MWGLscN_7l51xXAF79OFZmjqfNPto3JohTujho1eWZErHffpBnRYVH8889zpruvUOp0'; // 接続アプリのコンシューマ鍵（client_id)
 var AUDIENCE = 'https://login.salesforce.com'; // 固定
 
-var cert = fs.readFileSync('server.pem'); // 秘密鍵の読み込み
+var cert = fs.readFileSync('server.key'); // 秘密鍵の読み込み
 
 // JWTに記載されるメッセージの内容
 var claim = {
@@ -28,17 +28,20 @@ request({
     grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
     assertion: token
   }
-}, function(err, response, body) {
-  if (err) {
-    return console.error(err);
-  }
-  var ret = JSON.parse(body);
-  var conn = new jsforce.Connection({
-    accessToken: ret.access_token,
-    instanceUrl: ret.instance_url
-  });
-  conn.query('SELECT Id, Name FROM Account LIMIT 5').then(function(qr) {
-    console.log('Done:', qr.done);
-    console.log('Fetched Records:', qr.records);
-  });
-});
+}, 
+    function(err, response, body) {
+    if (err) {
+        return console.error(err);
+    }
+    var ret = JSON.parse(body);
+    console.log(ret.access_token);
+    var conn = new jsforce.Connection({
+        accessToken: ret.access_token,
+        instanceUrl: ret.instance_url
+    });
+    conn.query('SELECT Id, Name FROM Account LIMIT 5').then(function(qr) {
+        console.log('Done:', qr.done);
+        console.log('Fetched Records:', qr.records);
+    });
+    }
+);
