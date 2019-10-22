@@ -7,11 +7,11 @@ $SFDCKey="3MVG9pe2TCoA1Pf6b.MWGLscN_7l51xXAF79OFZmjqfNPto3JohTujho1eWZErHffpBnRY
 $SFDCLoginURL = "https://login.salesforce.com"
 $SFDCLoginUser = "mushimaruko@gmail.com"
 $SFDCEndPoint =  "https://login.salesforce.com/services/oauth2/token"
-$HeaderString='{"alg" : "RH256"}'
+$HeaderString='{"alg":"RS256","typ":"JWT"}'
 $ValidforSeconds = 250
 #固定文言のJsonヘッダー情報をBASE64へ変換する。
 $HeaderByte = $([System.Text.Encoding]::Default).GetBytes($HeaderString)
-$HeaderBase64 = $([System.Convert]::ToBase64String($HeaderByte))
+$HeaderBase64 = $([System.Convert]::ToBase64String($HeaderByte)).Split('=')[0].Replace('+', '-').Replace('/', '_')
 #Tokenの有効時間を算出し、Unix時間へ変換する。
 $NowTimeAddSec = $((Get-Date).AddSeconds($ValidforSeconds).ToUniversalTime() )
 $exptime = [int][double]::parse((Get-Date $NowTimeAddSec -UFormat %s)) 
@@ -24,7 +24,7 @@ $LoginMap = @{
 };
 $LoginJson = $($LoginMap | ConvertTo-Json)
 $LoginByte = $(([System.Text.Encoding]::Default).GetBytes($LoginJson) )
-$LoginBase64 = $([System.Convert]::ToBase64String($LoginByte))
+$LoginBase64 = $([System.Convert]::ToBase64String($LoginByte)).Split('=')[0].Replace('+', '-').Replace('/', '_')  
 #JWTの本文を構築する。
 $JWTRequest = $HeaderBase64 + "." + $LoginBase64
 #証明書による、サイン情報の構築

@@ -8,7 +8,6 @@ var ISSUER = '3MVG9pe2TCoA1Pf6b.MWGLscN_7l51xXAF79OFZmjqfNPto3JohTujho1eWZErHffp
 var AUDIENCE = 'https://login.salesforce.com'; // 固定
 
 var cert = fs.readFileSync('server.key'); // 秘密鍵の読み込み
-
 // JWTに記載されるメッセージの内容
 var claim = {
   iss: ISSUER,
@@ -19,7 +18,9 @@ var claim = {
 
 // JWTの生成と署名
 var token = jwt.sign(claim, cert, { algorithm: 'RS256'});
-
+console.log ('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+console.log (token) ;
+console.log ('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
 // JWT Bearer Token フローによるアクセストークンのリクエスト
 request({
   method: 'POST',
