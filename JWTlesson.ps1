@@ -1,7 +1,7 @@
 function aaa (){[System.Net.ServicePointManager]::SecurityProtocol =  [System.Net.ServicePointManager]::SecurityProtocol +  [System.Net.SecurityProtocolType]::Tls12;
 #定数定義
 #SSL Key File
-$SSLKeyFile = "C:\Users\mushi\.PowerShell\MyPowerShells\server.pem"
+$SSLKeyFile = "C:\Users\mushi\.PowerShell\MyPowerShells\server.key"
 $SFDCFixedGrantCode = "urn:ietf:params:oauth:grant-type:jwt-bearer"
 $SFDCKey="3MVG9pe2TCoA1Pf6b.MWGLscN_7l51xXAF79OFZmjqfNPto3JohTujho1eWZErHffpBnRYVH8889zpruvUOp0"
 $SFDCLoginURL = "https://login.salesforce.com"
